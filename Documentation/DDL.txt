@@ -1,0 +1,135 @@
+Full Entity Relationship (ER) Diagram
+
+[users] 1 ─── 1 [employees]
+          └──── Role: EMPLOYEE or MANAGER
+
+[employees] 1 ─── N [attendance]
+[employees] 1 ─── N [leaves]
+[employees] 1 ─── N [feedback]
+[employees] 1 ─── N [tasks]
+[employees] 1 ─── N [tickets]        ───→ also appears as "assigned_to"
+[users]     1 ─── N [chat_messages]  ───→ receiver_id/sender_id
+[tasks]     1 ─── N [task_status_logs]
+
+
+MySQL DDL: SQL Schema
+
+
+-- 1. Users Table
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role ENUM('MANAGER', 'EMPLOYEE') NOT NULL,
+    employee_id INT,
+    FOREIGN KEY (employee_id) REFERENCES employees(id)
+);
+
+-- 2. Employees Table
+CREATE TABLE employees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(15),
+    designation VARCHAR(100),
+    joining_date DATE,
+    department_id INT,
+    reporting_manager_id INT,
+    FOREIGN KEY (department_id) REFERENCES departments(id),
+    FOREIGN KEY (reporting_manager_id) REFERENCES employees(id)
+);
+
+-- 3. Departments Table
+CREATE TABLE departments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    manager_id INT,
+    FOREIGN KEY (manager_id) REFERENCES employees(id)
+);
+
+-- 4. Attendance Table
+CREATE TABLE attendance (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_id INT NOT NULL,
+    date DATE NOT NULL,
+    check_in_time TIME,
+    check_out_time TIME,
+    status ENUM('PRESENT', 'ABSENT', 'HALF_DAY', 'LEAVE'),
+    FOREIGN KEY (employee_id) REFERENCES employees(id)
+);
+
+-- 5. Leaves Table
+CREATE TABLE leaves (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_id INT NOT NULL,
+    start_date DATE,
+    end_date DATE,
+    reason TEXT,
+    status ENUM('PENDING', 'APPROVED', 'DECLINED') DEFAULT 'PENDING',
+    manager_comment TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (employee_id) REFERENCES employees(id)
+);
+
+-- 6. Feedback Table
+CREATE TABLE feedback (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_id INT NOT NULL,
+    date DATE,
+    feedback_text TEXT,
+    manager_reply TEXT,
+    reply_date TIMESTAMP,
+    FOREIGN KEY (employee_id) REFERENCES employees(id)
+);
+
+-- 7. Tasks Table
+CREATE TABLE tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255),
+    description TEXT,
+    assigned_by INT NOT NULL,
+    assigned_to INT NOT NULL,
+    deadline DATE,
+    priority ENUM('LOW', 'MEDIUM', 'HIGH'),
+    status ENUM('PENDING', 'WORKING', 'COMPLETED') DEFAULT 'PENDING',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (assigned_by) REFERENCES users(id),
+    FOREIGN KEY (assigned_to) REFERENCES employees(id)
+);
+
+-- 8. Task Status Logs Table
+CREATE TABLE task_status_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    task_id INT NOT NULL,
+    updated_by INT NOT NULL,
+    status ENUM('PENDING', 'WORKING', 'COMPLETED'),
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (task_id) REFERENCES tasks(id),
+    FOREIGN KEY (updated_by) REFERENCES users(id)
+);
+
+-- 9. Tickets Table
+CREATE TABLE tickets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255),
+    description TEXT,
+    assigned_to INT,
+    created_by INT,
+    status ENUM('OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED') DEFAULT 'OPEN',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    resolved_at TIMESTAMP,
+    FOREIGN KEY (assigned_to) REFERENCES employees(id),
+    FOREIGN KEY (created_by) REFERENCES employees(id)
+);
+
+-- 10. Chat Messages Table
+CREATE TABLE chat_messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT NOT NULL,
+    receiver_id INT NOT NULL,
+    message_text TEXT,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_read BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (sender_id) REFERENCES users(id),
+    FOREIGN KEY (receiver_id) REFERENCES users(id)
+);
