@@ -1,10 +1,10 @@
-package com.example.ems_backend;
+package com.ems.auth;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class EmsBackendApplicationTests {
+class AuthApplicationTests {
 
 	@Test
 	void contextLoads() {

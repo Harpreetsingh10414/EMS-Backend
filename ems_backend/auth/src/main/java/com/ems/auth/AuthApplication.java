@@ -1,13 +1,13 @@
-package com.example.ems_backend;
+package com.ems.auth;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EmsBackendApplication {
+public class AuthApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EmsBackendApplication.class, args);
+		SpringApplication.run(AuthApplication.class, args);
 	}
 
 }
