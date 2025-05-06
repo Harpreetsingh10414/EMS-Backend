@@ -1,31 +1,28 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>com.ems</groupId>
 	<artifactId>ems_backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-
 	<name>EMS Backend Parent</name>
 	<description>Multi-module Spring Boot backend for EMS</description>
-
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.5</version> <!-- ✅ Downgraded from 3.4.5 to stable 3.2.5 -->
-		<relativePath/> <!-- lookup parent from repository -->
+		<version>3.4.5</version>
+		<!--  ✅ Downgraded from 3.4.5 to stable 3.2.5  -->
+		<relativePath />
+		<!--  lookup parent from repository  -->
 	</parent>
-
 	<modules>
 		<module>auth</module>
 	</modules>
-
 	<properties>
-		<java.version>17</java.version> <!-- ✅ Match the version you're using -->
+		<java.version>17</java.version>
+		<!--  ✅ Match the version you're using  -->
 	</properties>
-
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -36,5 +33,4 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
 </project>

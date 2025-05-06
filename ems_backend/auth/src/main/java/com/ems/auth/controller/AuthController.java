@@ -23,12 +23,14 @@ public class AuthController {
     // http://localhost:8080/api/auth/register
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> registerEmployee(@RequestBody RegisterRequest registerRequest) {
+        System.out.println("***");
         AuthResponse authResponse = authService.register(registerRequest);
+
         return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
     }
 
     // ✅ Login endpoint
-    //http://localhost:8080/api/auth/login
+    // http://localhost:8080/api/auth/login
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> authenticateEmployee(@RequestBody LoginRequest loginRequest) {
         AuthResponse authResponse = authService.login(loginRequest);
