@@ -22,9 +22,9 @@ public class AuthController {
     // ✅ Register endpoint
     // http://localhost:8080/api/auth/register
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> registerEmployee(@RequestBody RegisterRequest registerRequest) {
-        AuthResponse authResponse = authService.register(registerRequest);
-        return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
+    public ResponseEntity<?> registerEmployee(@RequestBody RegisterRequest registerRequest) {
+        authService.register(registerRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build(); // Or HttpStatus.OK
     }
 
     // ✅ Login endpoint

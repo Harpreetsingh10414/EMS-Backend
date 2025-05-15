@@ -1,6 +1,6 @@
 package com.ems.auth.security;
 
-import com.ems.auth.model.Employee;
+import com.ems.auth.model.AuthUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.function.Function;
 
@@ -23,15 +24,20 @@ public class JwtService {
     private long jwtExpiration; // in milliseconds
 
     // 🔐 Generate signing key from secret
-    private SecretKey getSignInKey() {
+    /*private SecretKey getSignInKey() {
         return Keys.secretKeyFor(SignatureAlgorithm.HS256); // This will generate a secure 256-bit key
+    }*/
+
+    private SecretKey getSignInKey() {
+        return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
+
     // ✅ Generate token using Employee object
-    public String generateToken(Employee employee) {
+    public String generateToken(AuthUser authUser) {
         return Jwts.builder()
-                .setSubject(employee.getEmail())  // Use email from the employee
-                .claim("role", employee.getRole()) // Optionally, add role as a custom claim
+                .setSubject(authUser.getEmail())  // Use email from the employee
+                .claim("role", "ROLE_" + authUser.getRole().name())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
