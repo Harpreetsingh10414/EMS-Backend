@@ -1,6 +1,6 @@
-package com.ems.auth.repository;
+package com.ems.Employee.Service.repository;
 
-import com.ems.auth.model.Employee;
+import com.ems.Employee.Service.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

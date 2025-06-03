@@ -1,10 +1,12 @@
 package com.ems.auth.service;
 
+import com.ems.auth.client.EmployeeClient;
 import com.ems.auth.dto.AuthResponse;
+import com.ems.auth.dto.EmployeeDto;
 import com.ems.auth.dto.LoginRequest;
 import com.ems.auth.dto.RegisterRequest;
-import com.ems.auth.model.Employee;
-import com.ems.auth.repository.EmployeeRepository;
+import com.ems.auth.model.AuthUser;
+import com.ems.auth.repository.AuthUserRepository;
 import com.ems.auth.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,28 +20,36 @@ public class AuthServiceImpl implements AuthService {
     private static final String default_password = "otw@123";
 
 
-    private final EmployeeRepository employeeRepository;
+    private final AuthUserRepository authUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final EmployeeClient employeeClient;
 
     @Autowired
-    public AuthServiceImpl(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
-        this.employeeRepository = employeeRepository;
+    public AuthServiceImpl(AuthUserRepository authUserRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager, EmployeeClient employeeClient) {
+        this.authUserRepository = authUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.employeeClient = employeeClient;
     }
 
     @Override
-    public AuthResponse register(RegisterRequest request) {
-        // Check if email already exists
-        if (employeeRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("Email is already registered");
+    public void register(RegisterRequest request) {
+        EmployeeDto emp = employeeClient.getEmployeeByEmail(request.getEmail());
+        if (emp==null){
+            throw new RuntimeException("Employee not found");
+        } else if (emp.isRegistered()) {
+            throw new RuntimeException("Employee already registered");
         }
 
+        // Check if email already exists in authorization
+        if (authUserRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("Email is already registered");
+        }
         // Create new employee and save
-        Employee employee = Employee.builder()
+        AuthUser authUser = AuthUser.builder()
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(default_password))
@@ -47,13 +57,8 @@ public class AuthServiceImpl implements AuthService {
                 .active(true)
                 .build();
 
-        employeeRepository.save(employee);
-
-        // Generate JWT token
-        String token = jwtService.generateToken(employee);
-
-
-        return new AuthResponse(token,"Registered successfully");
+        authUserRepository.save(authUser);
+        employeeClient.markEmployeeRegistered(request.getEmail());
     }
 
     @Override
@@ -68,17 +73,14 @@ public class AuthServiceImpl implements AuthService {
                     )
             );
         } catch (AuthenticationException ex) {
-            // Customize the error message
             throw new RuntimeException("Invalid email or password");
         }
 
         // Fetch employee and generate token
-        Employee employee = employeeRepository.findByEmail(request.getEmail())
+        AuthUser authUser = authUserRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
-        System.out.println(employee);
-
-        String token = jwtService.generateToken(employee);
-
+        System.out.println(authUser);
+        String token = jwtService.generateToken(authUser);
         return new AuthResponse(token,"Login successfully");
     }
 }

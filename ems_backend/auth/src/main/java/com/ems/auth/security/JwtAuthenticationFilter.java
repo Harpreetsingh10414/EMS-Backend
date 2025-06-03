@@ -1,6 +1,6 @@
 package com.ems.auth.security;
 
-import com.ems.auth.service.CustomEmployeeDetailsService;
+import com.ems.auth.service.CustomUserDetailsService;
 import com.ems.auth.exception.JwtAuthenticationException; // Create a custom exception class for JWT issues
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +22,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService;
 
     @Autowired
-    private CustomEmployeeDetailsService customEmployeeDetailsService;
+    private CustomUserDetailsService customUserDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -45,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 2️⃣ Check authentication context and token validity
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
-                UserDetails employeeDetails = customEmployeeDetailsService.loadUserByUsername(userEmail);
+                UserDetails employeeDetails = customUserDetailsService.loadUserByUsername(userEmail);
 
                 if (jwtService.isTokenValid(jwt, employeeDetails.getUsername())) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
