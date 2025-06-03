@@ -1,7 +1,7 @@
 package com.ems.Employee.Service.service;
 
 import com.ems.Employee.Service.dto.AddEmployeeRequest;
-import com.ems.Employee.Service.dto.EmployeeDto;
+import com.ems.Employee.Service.dto.EmployeeDetailsDto;
 import com.ems.Employee.Service.model.Employee;
 import com.ems.Employee.Service.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +23,34 @@ public class EmployeeServiceImpl implements iEmployeeService{
     private EmployeeRepository employeeRepository;
 
     @Override
-    public EmployeeDto getEmployeeByEmail(String email) {
+    public EmployeeDetailsDto getEmployeeByEmail(String email) {
         Employee emp = employeeRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Employee not found"));
 
         System.out.println("data on get : "+emp);
-        EmployeeDto dto = new EmployeeDto();
+        EmployeeDetailsDto dto = new EmployeeDetailsDto();
+
+        dto.setId(emp.getId());
+        dto.setEmpId(emp.getEmpId());
+        dto.setEmpName(emp.getEmpName());
         dto.setEmail(emp.getEmail());
+        dto.setPhone(emp.getPhone());
+        dto.setAadhaar(emp.getAadhaar());
+        dto.setPassport(emp.getPassport());
+        dto.setDl(emp.getDl());
+        dto.setVoter(emp.getVoter());
+        dto.setPan(emp.getPan());
+        dto.setDesignation(emp.getDesignation());
+        dto.setSalary(emp.getSalary());
+        dto.setGender(emp.getGender());
+        dto.setStatus(emp.getStatus());
+        dto.setProfilePicPath(emp.getProfilePicPath());
+        dto.setAadhaarPicPath(emp.getAadhaarPicPath());
+        dto.setPassportPicPath(emp.getPassportPicPath());
+        dto.setDlPicPath(emp.getDlPicPath());
+        dto.setVoterPicPath(emp.getVoterPicPath());
+        dto.setPanPicPath(emp.getPanPicPath());
         dto.setRegistered(emp.isRegistered());
+
         return dto;
     }
 
