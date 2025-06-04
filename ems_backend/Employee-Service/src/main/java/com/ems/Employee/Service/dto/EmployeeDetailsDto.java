@@ -1,26 +1,13 @@
-package com.ems.Employee.Service.model;
+package com.ems.Employee.Service.dto;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Employee {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class EmployeeDetailsDto {
     private Long id;
-
-    private String empId;        // You can auto-generate this if needed
-    private String empName;      // Mapped from `fullName`
-
-    @Column(unique = true)
+    private String empId;
+    private String empName;
     private String email;
-
     private String phone;
     private String aadhaar;
     private String passport;
@@ -31,13 +18,11 @@ public class Employee {
     private Double salary;
     private String gender;
     private String status;
-
-    private String profilePicPath;     // Store file path or filename (optional)
+    private String profilePicPath;
     private String aadhaarPicPath;
     private String passportPicPath;
     private String dlPicPath;
     private String voterPicPath;
     private String panPicPath;
-
     private boolean registered;
 }
