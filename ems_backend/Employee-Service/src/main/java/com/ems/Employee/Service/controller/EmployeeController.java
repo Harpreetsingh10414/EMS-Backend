@@ -28,6 +28,7 @@ public class EmployeeController {
     }
 
 
+    //http://localhost:8080/admin/add
     @PostMapping("/add")
     public ResponseEntity<String> add(@RequestBody Employee employee){
         iEmployeeService.addEmployee(employee);
