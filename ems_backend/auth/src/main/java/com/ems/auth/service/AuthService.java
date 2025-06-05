@@ -8,4 +8,5 @@ public interface AuthService {
     AuthResponse login(LoginRequest request);
 
     void register(RegisterRequest request);
+    public String login1(LoginRequest request);
 }
