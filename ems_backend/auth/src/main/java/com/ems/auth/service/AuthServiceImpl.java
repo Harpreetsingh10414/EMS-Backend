@@ -83,4 +83,17 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtService.generateToken(authUser);
         return new AuthResponse(token,"Login successfully");
     }
+
+
+
+    @Override
+    public String login1(LoginRequest request) {
+        // Authenticate credentials
+        String email=request.getEmail();
+        String pass=request.getPassword();
+        if(email.equalsIgnoreCase("nikhil@gmail.com") && pass.equals("Nikhil@123")){
+            return  "Login successfully";
+        }
+        return "Invalid email or password";
+    }
 }
