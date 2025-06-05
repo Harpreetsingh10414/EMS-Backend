@@ -7,5 +7,6 @@ import com.ems.auth.dto.RegisterRequest;
 public interface AuthService {
     AuthResponse login(LoginRequest request);
 
-    AuthResponse register(RegisterRequest request);
+    void register(RegisterRequest request);
+    public String login1(LoginRequest request);
 }

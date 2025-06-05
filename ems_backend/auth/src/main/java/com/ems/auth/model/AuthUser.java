@@ -1,18 +1,14 @@
 package com.ems.auth.model;
 
-
-
-
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Employee {
+public class AuthUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -10,52 +10,36 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>ems-eureka-server</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>ems-eureka-server</name>
-	<description>Employee Management System Eureka Server Management</description>
-
-	<properties>
-		<java.version>17</java.version>
-		<spring-cloud.version>2023.0.1</spring-cloud.version> <!-- Ensure this matches the parent version -->
-	</properties>
+	<artifactId>eureka-server</artifactId>
+	<name>eureka-server</name>
+	<description>Eureka Service Registry</description>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-
+		<!-- Eureka Server -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
 		</dependency>
 
+		<!-- Web (to expose server on port) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<!-- Lombok (optional, for boilerplate reduction) -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Testing -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring-cloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 </project>
