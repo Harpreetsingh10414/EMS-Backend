@@ -11,7 +11,7 @@
 
 	<modules>
 		<module>auth</module>
-		<module>employee-service</module>
+		<!-- <module>employee-service</module> -->
 		<module>ems-eureka-server</module>
 	</modules>
 
